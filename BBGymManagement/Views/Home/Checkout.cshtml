@@ -1,0 +1,168 @@
+﻿@model BBGymManagement.MVVM.CheckoutModel
+@{
+    ViewBag.Title = "Checkout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Checkout</h2>
+
+<div class="col-md-6">
+    @using (Html.BeginForm("Checkout", "Home", FormMethod.Post, new { @id = "MyForm" }))
+    {
+        <input type="hidden" name="Product.Id" value="@Model.Product.Id" />
+        <input type="hidden" name="CustomerId" value="@Model.CustomerId" />
+        <div class="form-horizontal">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.CardName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CardName, new { htmlAttributes = new { @class = "form-control", @placeholder = "Johny Deep" } })
+                    @Html.ValidationMessageFor(model => model.CardName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CardNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CardNumber, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CardNumber, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CVV, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CVV, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CVV, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Month, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Month, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Month, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Year, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input id="btnSubmit" type="submit" value="Complete" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<div class="col-md-6">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Image</th>
+                <th scope="col">Name</th>
+                <th scope="col">Total Price:</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="text-center">
+                <th><img style="height:150px" src="@Model.Product.ImageUrl" /></th>
+                <td><span>@Model.Product.Name</span></td>
+                <td><span>@Model.Product.Price $</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $("#CardName").keyup(function () {
+
+        if (this.value.match(/[^a-zA-Z]/g)) {
+
+            this.value = this.value.replace(/[^a-zA-Z]/g, '');
+        }
+    });
+
+    var cardNumberLength = $("#CardNumber").val().length;
+    $("#CardNumber").on("keyup", function () {
+        cardNumberLength = $("#CardNumber").val().length
+        if (cardNumberLength > 16) {
+            $("#CardNumber").val($("#CardNumber").val().substring(0, $("#CardNumber").val().length - 1));
+        }
+    });
+
+    var cvvLength = $("#CVV").val().length;
+    $("#CVV").on("keyup", function () {
+        cvvLength = $("#CVV").val().length
+        if (cvvLength > 3) {
+            $("#CVV").val($("#CVV").val().substring(0, $("#CVV").val().length - 1));
+        }
+    });
+
+    var monthLength = $("#Month").val().length;
+    $("#Month").on("keyup", function () {
+        monthLength = $("#Month").val().length
+        if (monthLength > 2) {
+            $("#Month").val($("#Month").val().substring(0, $("#Month").val().length - 1));
+        }
+    });
+
+    var yearLength = $("#Year").val().length;
+    $("#Year").on("keyup", function () {
+        yearLength = $("#Year").val().length
+        if (yearLength > 2) {
+            $("#Year").val($("#Year").val().substring(0, $("#Year").val().length - 1));
+        }
+    });
+
+    var result = true;
+
+    $("#btnSubmit").click(function (event) {
+
+        event.preventDefault();
+
+        var cardName = $("#CardName").val();
+        var cardNumber = $("#CardNumber").val();
+        var cvv = $("#CVV").val();
+        var month = $("#Month").val();
+        var year = $("#Year").val();
+
+        if ($.trim(cardName) == "") {
+            $("#CardName").focus();
+            result = false;
+        }
+        else if (cardNumber.length < 16 || cardNumber == null) {
+            $("#CardNumber").focus();
+            result = false;
+        }
+        else if (cvv.length < 3 || cvv == null) {
+            $("#CVV").focus();
+            result = false;
+        }
+        else if (month.length < 1 || month == null || month < 1 || month > 13) {
+            $("#Month").focus();
+            result = false;
+        }
+        else if (year.length < 2 || year == null || year < 23) {
+            $("#Year").focus();
+            result = false;
+        }
+        else {
+            result = true;
+        }
+        
+        if (result == true) {
+            $("#MyForm").submit();
+        }
+    });
+</script>
+
+

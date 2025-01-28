@@ -1,0 +1,11 @@
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+@{
+    if (TempData["Product"] != null)
+    {
+        <h4 style="color:red;">@TempData["Product"]</h4>
+    }
+}
